@@ -81,7 +81,6 @@ sample file is available in **multizone** directory.
 > **Note: Please replace the values of the variables as per your project requirement. It is advisable to not to commit `terraform.tfvars` file in any
 > repository since it may contain sensitive information like password.**
 
-
 project_name                             = "iac-example"
 environment                              = "dev"
 resource_group                           = "iac-example-rg"
@@ -102,17 +101,13 @@ ibmcloud sl vlan list -d <zone_name>
 
 Execute below Terraform commands to provision the infrastructure:
 
-```bash
 terraform init
 terraform plan
 terraform apply
-```
 
 Optional: In case you want to clean up the infrastructure, execute below Terraform command: 
 
-```bash
 terraform destroy
-```
 
 ### How to use with Schematics
 
@@ -124,7 +119,6 @@ sample file is available in **multizone** directory.
 > **Note: Please replace the values of the variables as per your project requirement. It is advisable to not to commit `workspace-workshop.json` file in
 > any repository since it may contain sensitive information like password.**
 
-```json
 ...
 "template_repo": {
     "url": "https://github.com/gargpriyank/iac-ibm-openshift-ieam"
@@ -184,19 +178,15 @@ sample file is available in **multizone** directory.
           "value": "[]",
           "type": "list(string)"
         },
-...
-```      
+...      
 
 Set the api key variables **iaas_classic_username** and **iaas_classic_api_key**. Use below command to get the value of VLAN variables
 **public_vlan_id**, **private_vlan_id**, **additional_zone_public_service_endpoint** and **additional_zone_private_service_endpoint**.
 
-```bash
 ibmcloud sl vlan list -d <zone_name>
-```
 
 Execute the below Schematics commands:
 
-```bash
 # Create workspace:
 ibmcloud schematics workspace list
 ibmcloud schematics workspace new --file workspace-workshop.json #Create dev environment workspace.
@@ -209,50 +199,38 @@ ibmcloud schematics logs --id $WORKSPACE_ID --act-id Activity_ID
 # Apply plan:
 ibmcloud schematics apply --id $WORKSPACE_ID # Identify the Activity_ID
 ibmcloud schematics logs  --id $WORKSPACE_ID --act-id Activity_ID
-```
 
 Optional: In case you want to clean up the infrastructure, execute below Schematics command:
-
-```bash
 
 ibmcloud schematics destroy --id $WORKSPACE_ID # Identify the Activity_ID
 ibmcloud schematics logs  --id $WORKSPACE_ID --act-id Activity_ID
 
 ibmcloud schematics workspace delete --id $WORKSPACE_ID
 ibmcloud schematics workspace list
-```
 
 ### Project Validation
 
 To have access to the IKS cluster execute this **IBM Cloud CLI** command (`NAME` is the cluster name):
 
-```bash
 ibmcloud ks cluster config --cluster $NAME
-```
 
 If the project was executed with **Terraform**, get the outputs and kubectl configured executing these commands:
 
-```bash
 terraform output
 ibmcloud ks cluster config --cluster $(terraform output cluster_id)
-```
 
 If the project was executed with **IBM Cloud Schematics**, get the outputs and kubectl configured executing these commands:
 
-```bash
 ibmcloud schematics workspace list          # Identify the WORKSPACE_ID
 ibmcloud schematics workspace output --id $WORKSPACE_ID --json
 
 ibmcloud ks cluster config --cluster $(ibmcloud schematics output --id $WORKSPACE_ID --json | jq -r '.[].output_values[].cluster_id.value')
-```
 
 Some `oc` commands to verify you have access are:
 
-```bash
 oc cluster-info
 oc get nodes
 oc get pods -A
-```
 
 ## Deploy IBM Edge Application Manager
 
@@ -260,32 +238,25 @@ oc get pods -A
 Retrieve and copy the [entitlement key](https://myibm.ibm.com/products-services/containerlibrary) and set the environment 
 variable `IBM_CP_ENTITLEMENT_KEY`.
 
-    ```bash
-    export IBM_CP_ENTITLEMENT_KEY=<Your_IBM_Cloud_Pak_Entitlement_Key>
-    ```
+export IBM_CP_ENTITLEMENT_KEY=<Your_IBM_Cloud_Pak_Entitlement_Key>
 
 2) Create `workspace` directory in your local linux/mac box. Download **iac-ibm-openshift-ieam** repository code.
 
-    ```bash
-    mkdir <your_home_dir>/workspace
-    cd <your_home_dir>/workspace
-    git clone https://github.com/gargpriyank/iac-ibm-openshift-ieam.git
-    cd iac-ibm-openshift-ieam
-    chmod +x script/*.sh
-    ```
+mkdir <your_home_dir>/workspace
+cd <your_home_dir>/workspace
+git clone https://github.com/gargpriyank/iac-ibm-openshift-ieam.git
+cd iac-ibm-openshift-ieam
+chmod +x script/*.sh
+
 3) Login to OpenShift cluster and execute the shell script `ieam-deploy.sh`. This will deploy the Common Services and IEAM and create IEAM hub.
    
-    ```bash
-    oc login --token=<openshift_cluster_token> --server=<openshift_server_url>
-    ./script/ieam-deploy.sh
-    ```
+oc login --token=<openshift_cluster_token> --server=<openshift_server_url>
+./script/ieam-deploy.sh
    
 3) After the above script is executed successfully, run below command and make sure that all the pods are either in **Running** 
 or **Completed** status.
 
-    ```bash
-    oc get pods -n ibm-common-services
-    ```
+oc get pods -n ibm-common-services
 
 4) Download the IBM Edge Application Manager Agent package 
 from [IBM Passport Advantage](https://www.ibm.com/support/knowledgecenter/SSFKVV_4.2/hub/part_numbers.html?view=kc) 
@@ -293,7 +264,5 @@ or [IBM Internal DSW](https://w3-03.ibm.com/software/xl/download/ticket.wss) (fo
 `<your_home_dir/workspace`. Set the environment variable `IEAM_PACKAGE_FILE_NAME` with the downloaded file name 
 and execute the shell script `extract-ieam-agent-files.sh`.
 
-    ```bash
-    export IEAM_PACKAGE_FILE_NAME=<downloaded_file_name>
-   ./script/extract-ieam-agent-files.sh
-    ```
+export IEAM_PACKAGE_FILE_NAME=<downloaded_file_name>
+./script/extract-ieam-agent-files.sh
