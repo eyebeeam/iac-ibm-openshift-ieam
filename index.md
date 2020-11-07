@@ -81,7 +81,7 @@ sample file is available in **multizone** directory.
 > **Note: Please replace the values of the variables as per your project requirement. It is advisable to not to commit `terraform.tfvars` file in any
 > repository since it may contain sensitive information like password.**
 
-```hcl-terraform
+
 project_name                             = "iac-example"
 environment                              = "dev"
 resource_group                           = "iac-example-rg"
@@ -94,14 +94,11 @@ enable_private_service_endpoint          = "true"
 additional_zone_public_service_endpoint  = []
 additional_zone_private_service_endpoint = []
 ...
-```
 
 Set the api key variables **iaas_classic_username** and **iaas_classic_api_key**. Use below command to get the value of VLAN variables
 **public_vlan_id**, **private_vlan_id**, **additional_zone_public_service_endpoint** and **additional_zone_private_service_endpoint**.
 
-```bash
 ibmcloud sl vlan list -d <zone_name>
-```
 
 Execute below Terraform commands to provision the infrastructure:
 
