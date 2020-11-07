@@ -267,32 +267,32 @@ oc get pods -A
 Retrieve and copy the [entitlement key](https://myibm.ibm.com/products-services/containerlibrary) and set the environment 
 variable `IBM_CP_ENTITLEMENT_KEY`.
 
-    ```markdown
-    export IBM_CP_ENTITLEMENT_KEY=<Your_IBM_Cloud_Pak_Entitlement_Key>
-    ```
+```markdown
+export IBM_CP_ENTITLEMENT_KEY=<Your_IBM_Cloud_Pak_Entitlement_Key>
+```
 
 2) Create `workspace` directory in your local linux/mac box. Download **iac-ibm-openshift-ieam** repository code.
 
-    ```markdown
-    mkdir <your_home_dir>/workspace
-    cd <your_home_dir>/workspace
-    git clone https://github.com/gargpriyank/iac-ibm-openshift-ieam.git
-    cd iac-ibm-openshift-ieam
-    chmod +x script/*.sh
-    ```
+```markdown
+mkdir <your_home_dir>/workspace
+cd <your_home_dir>/workspace
+git clone https://github.com/gargpriyank/iac-ibm-openshift-ieam.git
+cd iac-ibm-openshift-ieam
+chmod +x script/*.sh
+```
 3) Login to OpenShift cluster and execute the shell script `ieam-deploy.sh`. This will deploy the Common Services and IEAM and create IEAM hub.
    
-    ```markdown
-    oc login --token=<openshift_cluster_token> --server=<openshift_server_url>
-    ./script/ieam-deploy.sh
-    ```
+```markdown
+oc login --token=<openshift_cluster_token> --server=<openshift_server_url>
+./script/ieam-deploy.sh
+```
    
 3) After the above script is executed successfully, run below command and make sure that all the pods are either in **Running** 
 or **Completed** status.
 
-    ```markdown
-    oc get pods -n ibm-common-services
-    ```
+```markdown
+oc get pods -n ibm-common-services
+```
 
 4) Download the IBM Edge Application Manager Agent package 
 from [IBM Passport Advantage](https://www.ibm.com/support/knowledgecenter/SSFKVV_4.2/hub/part_numbers.html?view=kc) 
@@ -300,7 +300,7 @@ or [IBM Internal DSW](https://w3-03.ibm.com/software/xl/download/ticket.wss) (fo
 `<your_home_dir/workspace`. Set the environment variable `IEAM_PACKAGE_FILE_NAME` with the downloaded file name 
 and execute the shell script `extract-ieam-agent-files.sh`.
 
-    ```markdown
-    export IEAM_PACKAGE_FILE_NAME=<downloaded_file_name>
-   ./script/extract-ieam-agent-files.sh
-    ```
+```markdown
+export IEAM_PACKAGE_FILE_NAME=<downloaded_file_name>
+./script/extract-ieam-agent-files.sh
+```
