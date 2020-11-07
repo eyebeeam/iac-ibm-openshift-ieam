@@ -22,7 +22,9 @@ This repository will deploy the IBM Edge Application Manager and provide the gui
 
 Below is the typical network architecture of the IBM Edge components produced by this repository code.
 
-![Image](https://github.com/gargpriyank/iac-ibm-openshift-ieam/blob/main/images/NetworkArchitecture.png)
+![Network Architecture](https://github.com/gargpriyank/iac-ibm-openshift-ieam/blob/main/images/NetworkArchitecture.png)
+
+![Image of Yaktocat](https://octodex.github.com/images/yaktocat.png)
 
 ## Provision OpenShift Classic cluster
 
