@@ -29,7 +29,6 @@ Below is the typical network architecture of the IBM Edge components produced by
 - [General Requirements](#general-requirements)
 - [How to use with Terraform](#how-to-use-with-terraform)
 - [How to use with Schematics](#how-to-use-with-schematics)
-- [How to use IBM Cloud Registry](#how-to-use-ibm-cloud-registry)
 - [Project Validation](#project-validation)
 
 ### General Requirements
