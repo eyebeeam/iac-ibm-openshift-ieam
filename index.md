@@ -54,7 +54,6 @@ Same for every pattern, the requirements are documented in the
 
 Executing these commands you are validating part of these requirements:
 
-```bash
 ibmcloud --version
 ibmcloud plugin show infrastructure-service | head -3
 ibmcloud plugin show schematics | head -3
@@ -62,12 +61,10 @@ ibmcloud target
 terraform version
 ls ~/.terraform.d/plugins/terraform-provider-ibm_*
 echo $IC_API_KEY
-```
 
 If you have an API Key but is not set, neither have the JSON file when it was created, you must recreate the key. Delete the old one if won't be in
 use anymore.
 
-```bash
 # Delete the old one, if won't be in use anymore
 ibmcloud iam api-keys       # Identify your old API Key Name
 ibmcloud iam api-key-delete NAME
@@ -75,7 +72,6 @@ ibmcloud iam api-key-delete NAME
 # Create a new one and set it as environment variable
 ibmcloud iam api-key-create TerraformKey -d "API Key for Terraform" --file ~/ibm_api_key.json
 export IC_API_KEY=$(grep '"apikey":' ~/ibm_api_key.json | sed 's/.*: "\(.*\)".*/\1/')
-```
 
 ### How to use with Terraform
 
