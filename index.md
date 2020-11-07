@@ -22,7 +22,7 @@ This repository will deploy the IBM Edge Application Manager and provide the gui
 
 Below is the typical network architecture of the IBM Edge components produced by this repository code.
 
-![Network Architecture](/images/NetworkArchitecture.png)
+![Network Architecture](/NetworkArchitecture.png)
 
 ## Provision OpenShift Classic cluster
 
