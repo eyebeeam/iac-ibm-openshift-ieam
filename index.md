@@ -22,14 +22,16 @@ This repository will deploy the IBM Edge Application Manager and provide the gui
 
 Below is the typical network architecture of the IBM Edge components produced by this repository code.
 
-![Network Architecture](/images/NetworkArchitecture.png)
+![Network Architecture](https://github.com/gargpriyank/iac-ibm-openshift-ieam/blob/main/images/NetworkArchitecture.png)
 
 ## Provision OpenShift Classic cluster
 
 - [General Requirements](#general-requirements)
 - [How to use with Terraform](#how-to-use-with-terraform)
 - [How to use with Schematics](#how-to-use-with-schematics)
-- [Project Validation](#project-validation)
+- [Validation](#validation)
+- [Deploy IBM Edge Application Manage (IEAM) and extract edge agent files](#deploy-ibm-edge-application-manager-ieam-and-extract-edge-agent-files)
+- [Deploy IEAM agent in edge node](#deploy-ieam-agent-in-edge-node)
 
 ### General Requirements
 
@@ -40,14 +42,15 @@ Same for every pattern, the requirements are documented in the
 - [Install IBM Cloud CLI](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#install-ibm-cloud-cli)
 - [Install the IBM Cloud CLI Plugins](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#ibm-cloud-cli-plugins) 
   `infrastructure-service`, `schematics` and `container-registry`.
-- [Login to IBM Cloud with the CLI](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#login-to-ibm-cloud)
+- [Log in to IBM Cloud with the CLI](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#login-to-ibm-cloud)
 - [Install Terraform](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#install-terraform)
 - [Configure access to IBM Cloud](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#configure-access-to-ibm-cloud) for
   Terraform and the IBM Cloud CLI
 - [Install IBM Cloud Terraform Provider](https://ibm.github.io/cloud-enterprise-examples/iac/setup-environment#configure-access-to-ibm-cloud)
 - Install some utility tools such as:
-  [jq](https://stedolan.github.io/jq/download/), 
-  [IBM Cloud Pak CLI (cloudctl) and OpenShift client CLI (oc)](https://www.ibm.com/support/knowledgecenter/SSFKVV_4.2/cli/cloudctl_oc_cli.html)
+  - [jq](https://stedolan.github.io/jq/download/)
+  - [IBM Cloud Pak CLI (cloudctl) and OpenShift client CLI (oc)](https://www.ibm.com/support/knowledgecenter/SSFKVV_4.2/cli/cloudctl_oc_cli.html)
+  - [docker](https://www.ibm.com/links?url=https%3A%2F%2Fdocs.docker.com%2Fget-docker%2F)
 
 > The IBM Cloud Terraform provider must be version 1.8.0 or later. This example is using Terraform version 0.12.0.
 
@@ -84,7 +87,7 @@ sample file is available in **multizone** directory.
 > **Note: Please replace the values of the variables as per your project requirement. It is advisable to not to commit `terraform.tfvars` file in any
 > repository since it may contain sensitive information like password.**
 
-```hcl-terraform
+```markdown
 project_name                             = "iac-example"
 environment                              = "dev"
 resource_group                           = "iac-example-rg"
@@ -228,7 +231,7 @@ ibmcloud schematics workspace delete --id $WORKSPACE_ID
 ibmcloud schematics workspace list
 ```
 
-### Project Validation
+### Validation
 
 To have access to the IKS cluster execute this **IBM Cloud CLI** command (`NAME` is the cluster name):
 
@@ -260,9 +263,9 @@ oc get nodes
 oc get pods -A
 ```
 
-## Deploy IBM Edge Application Manager
+## Deploy IBM Edge Application Manager (IEAM) and extract edge agent files
 
-1) Login to your local linux/mac box with admin privileges. 
+1. Log in to your local linux/mac box with admin privileges. 
 Retrieve and copy the [entitlement key](https://myibm.ibm.com/products-services/containerlibrary) and set the environment 
 variable `IBM_CP_ENTITLEMENT_KEY`.
 
@@ -270,7 +273,7 @@ variable `IBM_CP_ENTITLEMENT_KEY`.
 export IBM_CP_ENTITLEMENT_KEY=<Your_IBM_Cloud_Pak_Entitlement_Key>
 ```
 
-2) Create `workspace` directory in your local linux/mac box. Download **iac-ibm-openshift-ieam** repository code.
+2. Create `workspace` directory in your local linux/mac box. Download **iac-ibm-openshift-ieam** repository code.
 
 ```markdown
 mkdir <your_home_dir>/workspace
@@ -279,27 +282,103 @@ git clone https://github.com/gargpriyank/iac-ibm-openshift-ieam.git
 cd iac-ibm-openshift-ieam
 chmod +x script/*.sh
 ```
-3) Login to OpenShift cluster and execute the shell script `ieam-deploy.sh`. This will deploy the Common Services and IEAM and create IEAM hub.
+3. Log in to OpenShift cluster and execute the shell script `ieam-deploy.sh`. This will deploy the Common Services and IEAM and create IEAM hub.
    
 ```markdown
 oc login --token=<openshift_cluster_token> --server=<openshift_server_url>
 ./script/ieam-deploy.sh
 ```
    
-3) After the above script is executed successfully, run below command and make sure that all the pods are either in **Running** 
+4. After the above script is executed successfully, run below command and make sure that all the pods are either in **Running** 
 or **Completed** status.
 
 ```markdown
 oc get pods -n ibm-common-services
 ```
 
-4) Download the IBM Edge Application Manager Agent package 
+5. Download the IBM Edge Application Manager Agent package 
 from [IBM Passport Advantage](https://www.ibm.com/support/knowledgecenter/SSFKVV_4.2/hub/part_numbers.html?view=kc) 
 or [IBM Internal DSW](https://w3-03.ibm.com/software/xl/download/ticket.wss) (for IBMers only) and save it in the directory 
 `<your_home_dir/workspace`. Set the environment variable `IEAM_PACKAGE_FILE_NAME` with the downloaded file name 
-and execute the shell script `extract-ieam-agent-files.sh`.
+and execute the shell script `install_hzn_cli.sh`. This will install the horizon CLI.
+> **Note: Update `install_hzn_cli.sh` file as per your operating system. It supports Linux and macOS. By default, it is configured for macOS.
 
 ```markdown
 export IEAM_PACKAGE_FILE_NAME=<downloaded_file_name>
-./script/extract-ieam-agent-files.sh
+export FIRST_ORG_ID=sandbox-edge-workshop-ieam-cluster   Feel free to choose any organization id.
+./script/install_hzn_cli.sh
+```
+
+6. The environment variables in below will set the IEAM hub cluster URL, User Name and Password. You can log in to IEAM hub using these credentials.
+
+```markdown
+export CLUSTER_URL=https://$(oc get cm management-ingress-ibmcloud-cluster-info -o jsonpath='{.data.cluster_ca_domain}')
+export CLUSTER_USER=$(oc -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_username}' | base64 --decode)
+export CLUSTER_PW=$(oc -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 --decode)
+```
+
+7. Extract the IEAM edge agent files to install it on each node.
+
+```markdown
+./script/extract_edge_node_files.sh
+```
+
+8. Log in to IEAM management hub via `cloudctl` and create an apikey. Note down the apikey for future use.
+
+```markdown
+cloudctl login -a $CLUSTER_URL -u $CLUSTER_USER -p $CLUSTER_PW --skip-ssl-validation
+cloudctl iam api-key-create edge-app-apikey -d "API key to connect to IEAM hub" # You are free to choose any name for apikey
+```
+
+9. Locate the files **agent-install.sh** and **agent-uninstall.sh** as per your operating system.
+
+- Linux:
+
+```markdown
+ls /usr/horizon/bin/agent-install.sh
+ls /usr/horizon/bin/agent-uninstall.sh
+```
+
+- macOS:
+
+```markdown
+ls /usr/local/bin/agent-install.sh
+ls /usr/local/bin/agent-uninstall.sh
+```
+
+## Deploy IEAM agent in edge node
+
+1. Log in to your edge node with root privileges. Install [docker](https://www.ibm.com/links?url=https%3A%2F%2Fdocs.docker.com%2Fget-docker%2F)
+and run below commands to add a new user and group and switch log in to new user.
+> Note: For edge node only Linux operating system is supported.
+
+```markdown
+useradd -s /bin/bash -m -d /home/ibm-workshop -G sudo ibm-workshop  # You are free to choose any user name and group
+usermod -g users ibm-workshop
+usermod -a -G docker ibm-workshop
+passwd ibm-workshop
+su - ibm-workshop
+```
+
+2. Export all the necessary environment variables.
+
+```markdown
+export HZN_EXCHANGE_USER_AUTH=iamapikey:<api-key-generated-above>
+export HZN_EXCHANGE_URL=<ieam-management-hub-url>/edge-exchange/v1  # <ieam-management-hub-url> is same as CLUSTER_URL
+export HZN_FSS_CSSURL=<ieam-management-hub-url>/edge-css/   # <ieam-management-hub-url> is same as CLUSTER_URL
+export HZN_ORG_ID=sandbox-edge-workshop-ieam-cluster    # This should be same organization id you created while deploying IEAM hub
+```
+
+3. Create **workspace** directory and copy the files **agent-install.sh** and **agent-uninstall.sh** generate above into **workspace** directory.
+
+```markdown
+mkdir /home/ibm-workshop/workspace
+cd /home/ibm-workshop/workspace
+cp <your_home_dir>/workspace /home/ibm-workshop/workspace   # <your_home_dir> is in your local system
+```
+
+4. Deploy IEAM agent, deploy sample helloworld service and register node.
+
+```markdown
+sudo -s -E ./agent-install.sh -i 'css:' -p IBM/pattern-ibm.helloworld -w '*' -T 120
 ```
