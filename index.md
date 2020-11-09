@@ -265,7 +265,7 @@ oc get pods -A
 
 ## Deploy IBM Edge Application Manager (IEAM) and extract edge agent files
 
-1. Log in to your local linux/mac box with admin privileges. 
+1. Numbered Log in to your local linux/mac box with admin privileges. 
 Retrieve and copy the [entitlement key](https://myibm.ibm.com/products-services/containerlibrary) and set the environment 
 variable `IBM_CP_ENTITLEMENT_KEY`.
 
