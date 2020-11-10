@@ -25,7 +25,7 @@ Virtual Server, IBM Cloudant database, and IBM Event Streams (enable_event_strea
 
 Below is the typical network architecture of the IBM Edge components produced by this repository code.
 
-![Network Architecture](/images/NetworkArchitecture.png1)
+![Network Architecture](/images/NetworkArchitecture.png)
 
 ## Provision OpenShift Classic cluster
 
